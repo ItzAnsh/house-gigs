@@ -1,17 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from 'apps/house-gigs/src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UUID } from 'crypto';
 import { validate } from 'uuid';
 import { UserCreationDto } from '../DTO/user.dto';
 import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { ClientProxy } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';
+import { Inject } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @Inject('BOOKING_SERVICE') private client: ClientProxy,
   ) {}
 
   async findOne(id: string): Promise<User | null> {
@@ -67,4 +70,8 @@ export class UserService {
   }
 
   async RegisterUser(user: User) {}
+
+  async search(message: string, body: any) {
+    return this.client.send(message, body);
+  }
 }

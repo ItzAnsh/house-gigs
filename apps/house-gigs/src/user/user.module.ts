@@ -7,9 +7,19 @@ import { Slot } from '../entities/slot.entity';
 import { Package } from '../entities/package.entity';
 import { Gig } from '../entities/gig.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Gigster, Slot, Package, Gig])],
+  imports: [TypeOrmModule.forFeature([User, Gigster, Slot, Package, Gig]), 
+    ClientsModule.register([
+      {
+        name: 'BOOKING_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          port: 3002,
+        },
+      },
+    ])],
   controllers: [UserController],
   providers: [UserService],
 })

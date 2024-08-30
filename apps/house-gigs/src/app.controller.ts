@@ -14,24 +14,6 @@ export class AppController {
     return (data || []).reduce((a, b) => a + b);
   }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('/pingUserService')
-  ping() {
-    // console.log('pong');
-    return this.appService.pingUserService('ping2', {});
-  }
-
-  
-
-  @Post('/gigster/create')
-  createGigster(@Body() body: any) {
-    return this.appService.pingUserService('user.createGigster', body);
-  }
-
   // @Get('/ping-user-service')
   // pingUserService() {
   //   return this.appService.pingUserService();

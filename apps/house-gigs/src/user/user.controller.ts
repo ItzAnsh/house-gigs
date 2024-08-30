@@ -78,7 +78,6 @@ export class UserController {
 
       sendEmail(user.email, 'Welcome to House Gigs', generateHashToken);
       return;
-
     } catch (e) {
       console.log('error creating user:\n', e);
       throw new HttpErrorByCode[400]('Bad request');
@@ -101,7 +100,7 @@ export class UserController {
     }
 
     // console.log(await bcrypt.compare(user.password, foundUser.password))
-    if (!await bcrypt.compare(user.password, foundUser.password)) {
+    if (!(await bcrypt.compare(user.password, foundUser.password))) {
       throw new HttpErrorByCode[401]('Password incorrect');
     }
 
@@ -111,7 +110,7 @@ export class UserController {
         expiresIn: '1w',
       }),
       name: foundUser.name,
-      role: foundUser.role == "gigster" ? 200 : 203,
+      role: foundUser.role == 'gigster' ? 200 : 203,
     };
   }
 
@@ -130,6 +129,11 @@ export class UserController {
     // await this.userService.(foundUser);
     await this.userService.verify(foundUser.id);
     return { message: 'User verified' };
+  }
+
+  @Post('search')
+  async search(@Body() body) {
+    return this.userService.search('booking.search', body);
   }
 
   // Bad Response Test
