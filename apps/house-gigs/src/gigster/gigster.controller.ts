@@ -34,26 +34,31 @@ export class GigsterController {
     return res;
   }
 
-  @Post('/addTimeSlot')
-  async addTimeSlot(@Request() req, @Body() body) {
-    const res = await this.gigsterService.sendServiceRequest(
-      'gigster.addTimeSlot',
-      body,
-    );
-    //   console.log(res);
+  // @Post('/addTimeSlot')
+  // async addTimeSlot(@Request() req, @Body() body) {
+  //   const res = await this.gigsterService.sendServiceRequest(
+  //     'gigster.addTimeSlot',
+  //     body,
+  //   );
+  //   //   console.log(res);
 
-    return res;
-  }
+  //   return res;
+  // }
 
-  @Get('/getTimeSlots')
-  async getTimeSlots(@Request() req) {
-    const res = await this.gigsterService.sendServiceRequest(
-      'gigster.getTimeSlots',
-      {},
-    );
-    //   console.log(res);
+  // @Get('/getTimeSlots')
+  // async getTimeSlots(@Request() req) {
+  //   const res = await this.gigsterService.sendServiceRequest(
+  //     'gigster.getTimeSlots',
+  //     {},
+  //   );
+  //   //   console.log(res);
 
-    return res;
+  //   return res;
+  // }
+
+  @Get("/allSlots")
+  async getAllSlots() {
+    return await this.gigsterService.sendServiceRequest('gigster.getAllSlots', {});
   }
 
   @Get('/getAllGigsters')
@@ -62,6 +67,14 @@ export class GigsterController {
       'user.getAllGigsters',
       {},
     );
+  }
+
+  @Post('/addTimeSlotToGigster')
+  async addTimeSlotToGigster(@Request() req, @Body() body) {
+    return await this.gigsterService.sendServiceRequest('gigster.addTimeSlotToGigster', {
+      ...body,
+      userId: req.user,
+    });
   }
 
   @Get('/updateGiggy')
@@ -77,10 +90,10 @@ export class GigsterController {
     return res;
   }
 
-  @Get('/:id')
+  @Get('id/:id')
   async getGigsterById(@Param('id') id: string) {
     const res = await this.gigsterService.sendServiceRequest(
-      'user.getGigsterByUserId',
+      'user.getGigsterById',
       { id },
     );
     // console.log(res);

@@ -1,18 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { UUID } from 'crypto';
 
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn('uuid')
-  id: UUID;
+  id: string;
 
   @Column({
     nullable: false,
   })
-  userId: UUID;
+  userId: string;
 
   @Column({
     default: [],
+    array: true
   })
-  prefrences: [string];
+  prefrences: string;
 }

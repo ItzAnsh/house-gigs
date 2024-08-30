@@ -1,18 +1,21 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import {UUID} from 'crypto';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Gigster } from './gigster.entity';
 
 @Entity()
 export class Slot {
-    @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({
-        nullable: false,
-    })
-    start: Date
+  @Column({
+    nullable: false,
+  })
+  start: Date;
 
-    @Column({
-        nullable: false,
-    })
-    end: Date
+  @Column({
+    nullable: false,
+  })
+  end: Date;
+
+  @ManyToMany(() => Gigster, (gigster) => gigster.slotTimings)
+  gigsters: Gigster[];
 }

@@ -96,6 +96,10 @@ export class UserController {
       throw new HttpErrorByCode[404]('User not found');
     }
 
+    if (!foundUser.isVerified) {
+      throw new HttpErrorByCode[401]('User not verified');
+    }
+
     // console.log(await bcrypt.compare(user.password, foundUser.password))
     if (!await bcrypt.compare(user.password, foundUser.password)) {
       throw new HttpErrorByCode[401]('Password incorrect');

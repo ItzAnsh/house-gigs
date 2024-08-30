@@ -7,15 +7,17 @@ import {
   OneToOne,
   OneToMany,
 } from 'typeorm';
-import { User } from 'apps/house-gigs/src/entities/user.entity';
+// import { User } from 'apps/house-gigs/src/entities/user.entity';
+import { Customer } from './customer.entity';
+import { Gigster } from './gigster.entity';
 import { Gig } from './gig.entity';
 import { Slot } from './slot.entity';
 
-enum BookingStatus {
+export enum BookingStatus {
   pending = 'pending',
   accepted = 'accepted',
   rejected = 'rejected',
-  completed = 'completed',
+  completedByGigster = 'completed',
   cancelled = 'cancelled',
 }
 
@@ -24,9 +26,9 @@ export class Booking {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, (user) => user.id)
+  @OneToOne(() => Customer, (customer) => customer.id)
   @JoinColumn()
-  userId: User;
+  userId: Customer;
 
   @OneToOne(() => Gig, (gig) => gig.id)
   @JoinColumn()
@@ -36,14 +38,15 @@ export class Booking {
   @JoinColumn()
   slotId: Slot[];
 
-  @OneToOne(() => User, (user) => user.id)
+  @OneToOne(() => Gigster, (user) => user.id)
   @JoinColumn()
-  gigsterId: User;
+  gigsterId: Gigster;
 
   @Column({
     nullable: false,
     type: 'enum',
     enum: BookingStatus,
+    default: BookingStatus.pending,
   })
   status: BookingStatus;
 }

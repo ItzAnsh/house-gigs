@@ -9,6 +9,7 @@ import { GigsterModule } from './gigster/gigster.module';
 import { TokenParser } from './utils/tokenParser';
 import { MiddlewareConsumer } from '@nestjs/common';
 import { NestModule } from '@nestjs/common';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -18,6 +19,13 @@ import { NestModule } from '@nestjs/common';
         transport: Transport.TCP,
         options: {
           port: 3001,
+        },
+      },
+      {
+        name: 'BOOKING_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          port: 3002,
         },
       },
     ]),
@@ -40,13 +48,14 @@ import { NestModule } from '@nestjs/common';
     GigModule,
 
     GigsterModule,
+
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TokenParser).forRoutes('/gigster');
+    consumer.apply(TokenParser).forRoutes('/gigster', '/customer');
   }
 }

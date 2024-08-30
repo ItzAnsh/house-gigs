@@ -37,11 +37,9 @@ export class Gigster {
   @JoinColumn()
   gig: Gig;
 
-  @Column({
-    nullable: false,
-    type: 'uuid',
-  })
-  gigId: UUID;
+  @OneToOne(() => User, (user) => user.id)
+  @JoinColumn()
+  gigId: string;
 
   @Column('decimal', { precision: 5, scale: 2, default: 0 })
   rating: number;

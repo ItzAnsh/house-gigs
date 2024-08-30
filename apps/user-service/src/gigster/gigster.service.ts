@@ -11,6 +11,8 @@ import { User } from '../entities/user.entity';
 import { Package } from '../entities/package.entity';
 import { Gig } from '../entities/gig.entity';
 import { FindOptionsWhere } from 'typeorm';
+import { In } from 'typeorm';
+import { HttpException } from '@nestjs/common';
 
 function getHourDifference(start: Date, end: Date) {
   return (end.getTime() - start.getTime()) / 60 / 60 / 1000;
@@ -22,38 +24,48 @@ export class GigsterService {
     @InjectRepository(Gigster) private gigsterRepository: Repository<Gigster>,
     @InjectRepository(Slot) private slotRepository: Repository<Slot>,
     @InjectRepository(Gig) private GigRepo: Repository<Gig>,
+    @InjectRepository(Package) private packageRepository: Repository<Package>,
   ) {}
 
   async createGigster(gigster: any) {
     try {
+      // Check if the gigster already exists by user ID
       const foundGigster = await this.gigsterRepository.findOne({
-        where: {
-          userId: {
-            id: gigster.userId,
-          },
-        },
+        where: { user: { id: gigster.userId } },
       });
-      console.log(foundGigster);
 
       if (foundGigster) {
-        throw new HttpErrorByCode[400]('Gigster already exists');
+        throw new HttpException('Gigster already exists', 400);
       }
 
-      const newGigster = new Gigster();
+      // Parse the input data using DTO validation
       const parsedData = gigsterDTO.parse(gigster);
-      console.log(parsedData);
 
+      // Fetch the associated slot timings from the slot repository
+      const slotTimings = await this.slotRepository.findBy({
+        id: In(parsedData.slotTimings),
+      });
+
+      // Fetch the associated packages from the package repository
+      const packages = await this.packageRepository.findBy({
+        id: In(parsedData.packages),
+      });
+
+      // Create a new Gigster entity and assign parsed data
+      const newGigster = new Gigster();
       Object.assign(newGigster, {
-        userId: { id: parsedData.userId } as User,
-        slotTimings: [{ id: parsedData.slotTimings.toString() }] as Slot[],
-        packages: [{ id: parsedData.packages.toString() }] as Package[],
+        user: { id: parsedData.userId } as User,
+        slotTimings: slotTimings as Slot[],
+        packages: packages as Package[],
         available: parsedData.available,
         gig: { id: parsedData.gigId } as Gig,
       });
+
+      // Save the new gigster to the repository and return the saved entity
       return await this.gigsterRepository.save(newGigster);
     } catch (e) {
-      console.log(e);
-      // return { Status: false };
+      // Log the error and rethrow it
+      console.error('Error creating Gigster:', e || e);
       throw e;
     }
   }
@@ -61,25 +73,42 @@ export class GigsterService {
   async getGigsterById(id: string): Promise<Gigster> {
     return this.gigsterRepository.findOne({
       where: { id: id as UUID },
-      relations: ['userId'],
+      relations: ['user', 'gig'],
+      select: {
+        id: true,
+        available: true,
+        gigId: true,
+        rating: true,
+        gig: {
+          name: true,
+        },
+        slotTimings: true,
+        packages: true,
+        user: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+        },
+      },
     });
   }
 
   async getGigsterByUserId(userId: string): Promise<Gigster> {
     return await this.gigsterRepository.findOne({
       where: {
-        userId: {
+        user: {
           id: userId, // Directly use userId here
         },
       },
-      relations: ['userId'], // Include related 'userId' entity
+      relations: ['user', 'gig'], // Include related 'userId' entity
       select: {
         id: true,
         available: true,
         gigId: true,
         slotTimings: true,
         packages: true,
-        userId: {
+        user: {
           id: true,
           email: true,
           name: true,
@@ -101,31 +130,31 @@ export class GigsterService {
 
   async getAllGigsters() {
     return await this.gigsterRepository.find({
-      relations: ['userId', 'gig'],
+      relations: ['user', 'gig', 'slotTimings'],
     });
   }
 
   async updateGigster() {
-    const found = await this.GigRepo.findOne({
-      where: {
-        id: 'bc1d9be7-0de0-4428-8b36-e33b5ac79641',
-      },
-    });
+    // const found = await this.GigRepo.findOne({
+    //   where: {
+    //     id: 'bc1d9be7-0de0-4428-8b36-e33b5ac79641',
+    //   },
+    // });
 
-    const gigster = await this.gigsterRepository.findOne({
-      where: {
-        userId: {
-          id: 'e37c11d0-7aff-4cf2-81a1-51a5ffe515a1',
-        },
-      },
-    });
+    // const gigster = await this.gigsterRepository.findOne({
+    //   where: {
+    //     userId: {
+    //       id: 'e37c11d0-7aff-4cf2-81a1-51a5ffe515a1',
+    //     },
+    //   },
+    // });
 
     // gigster.gig = found;
     return await this.gigsterRepository.clear();
   }
 
   async addTimeSlot(slot: SlotAdd) {
-    const AllSlots = this.slotRepository.find();
+    // const AllSlots = this.slotRepository.find();
 
     slot.start = new Date(slot.start);
     slot.end = new Date(slot.end);
@@ -142,6 +171,32 @@ export class GigsterService {
     const newSlot = new Slot();
     Object.assign(newSlot, slot);
     return await this.slotRepository.save(newSlot);
+  }
+
+  async addTimeSlotToGigster(body: any) {
+    if (!body.userId) {
+      throw new HttpErrorByCode[401]('Unauthorized');
+    }
+    const gigster = await this.gigsterRepository.findOne({
+      where: {
+        user: body.userId
+      },
+    });
+    console.log(gigster);
+
+    const slots = await this.slotRepository.findBy({
+      id: In(body.slots),
+    });
+
+    // console.log(slots);
+    body.slots.forEach((slot) => {
+      if (!slots.includes(slot as Slot)) {
+        gigster.slotTimings.push(slot as Slot);
+      }
+    });
+    console.log(gigster);
+
+    return await this.gigsterRepository.save(gigster);
   }
 
   async getSlots() {

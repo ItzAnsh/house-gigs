@@ -40,6 +40,17 @@ export class GigsterController {
     return await this.gigsterService.addTimeSlot(body);
   }
 
+  @MessagePattern('gigster.addTimeSlotToGigster')
+  async addTimeSlotToGigster(@Body() body: any) {
+    // console.log(body);
+    return await this.gigsterService.addTimeSlotToGigster(body);
+  }
+
+  @MessagePattern('gigster.getAllSlots')
+  async getTimeSlots() {
+    return await this.gigsterService.getSlots();
+  }
+
   @MessagePattern('gigster.update')
   async update(@Body() body: any) {
     console.log('HEREEE');

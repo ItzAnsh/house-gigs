@@ -24,7 +24,7 @@ export class CustomerService {
     }
   }
 
-  async findCustomerById(id: string): Promise<Customer> {
+  async findCustomerById({id}): Promise<Customer> {
     try {
       return await this.customerRepository.findOne({where: {id}});
     } catch (e) {
@@ -33,7 +33,7 @@ export class CustomerService {
     }
   }
 
-  async getALlCustomers(): Promise<Customer[]> {
+  async getAllCustomers(): Promise<Customer[]> {
     try {
       return await this.customerRepository.find();
     } catch (e) {
@@ -51,7 +51,7 @@ export class CustomerService {
     }
   }
 
-  async removeCustomerById(id: string): Promise<void> {
+  async removeCustomerById({id}): Promise<void> {
     try {
       await this.customerRepository.delete(id);
     } catch (e) {

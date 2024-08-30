@@ -1,29 +1,41 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
-import {UUID} from 'crypto';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne, OneToMany} from 'typeorm';
 import { User } from 'apps/house-gigs/src/entities/user.entity';
 import { Gig } from './gig.entity';
 import { Slot } from './slot.entity';
 
+enum BookingStatus {
+    pending = 'pending',
+    accepted = 'accepted',
+    rejected = 'rejected',
+    completed = 'completed',
+    cancelled = 'cancelled'
+}
+
 @Entity()
 export class Booking {
     @PrimaryGeneratedColumn('uuid')
-    id: UUID;
+    id: string;
 
-    @ManyToOne(() => User, (user) => user.id)
+    @OneToOne(() => User, (user) => user.id)
+    @JoinColumn()
     userId: User;
 
-    @ManyToOne(() => Gig, (gig) => gig.id)
+    @OneToOne(() => Gig, (gig) => gig.id)
+    @JoinColumn()
     gigId: Gig;
 
-    @ManyToOne(() => Slot, (slot) => slot.id)
-    slotId: Slot;
+    @OneToMany(() => Slot, (slot) => slot.id)
+    @JoinColumn()
+    slotId: Slot[];
 
-    @ManyToOne(() => User, (user) => user.id)
+    @OneToOne(() => User, (user) => user.id)
+    @JoinColumn()
     gigsterId: User;
 
     @Column({
         nullable: false,
-        type: 'enum'
+        type: 'enum',
+        enum: BookingStatus
     })
-    status: 'pending' | 'accepted' | 'rejected' | 'completed';
+    status: BookingStatus;
 }
