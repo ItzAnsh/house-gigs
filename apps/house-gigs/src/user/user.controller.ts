@@ -131,9 +131,19 @@ export class UserController {
     return { message: 'User verified' };
   }
 
+  @Get('/homepage')
+  async homepage() {
+    return { message: 'Welcome to House Gigs' };
+  }
+
   @Post('search')
   async search(@Body() body) {
     return this.userService.search('booking.search', body);
+  }
+
+  @Get('/package/:id')
+  async getPackage(@Param('id') id: string) {
+    return this.userService.search('packages.findById', { id });
   }
 
   // Bad Response Test

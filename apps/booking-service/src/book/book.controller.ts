@@ -7,32 +7,35 @@ import { Gigster } from '../entities/gigster.entity';
 
 @Controller('bookPriv')
 export class BookController {
-    constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookService) {}
 
-    @MessagePattern("bookings.showUserBookings")
-    async getBookingsByCustomerId(@Body() body): Promise<Booking[]> {
-        return this.bookService.getBookingsByCustomerId(body);
-    }
+  @MessagePattern('bookings.showUserBookings')
+  async getBookingsByCustomerId(@Body() body): Promise<Booking[]> {
+    return this.bookService.getBookingsByCustomerId(body);
+  }
 
-    @MessagePattern("bookings.showGigsterBookings")
-    async getBookingsByGigsterId(@Body() body): Promise<Booking[]> {
-        return this.bookService.getBookingsByGigsterId(body
-        );
-    }
+  @MessagePattern('bookings.showGigsterBookings')
+  async getBookingsByGigsterId(@Body() body): Promise<Booking[]> {
+    return this.bookService.getBookingsByGigsterId(body);
+  }
 
+  @MessagePattern('booking.create')
+  async createBooking(@Request() req, @Body() body): Promise<Booking> {
+    return this.bookService.createBooking(req.body);
+  }
 
-    @MessagePattern("booking.create")
-    async createBooking(@Request() req, @Body() body): Promise<Booking> {
-        return this.bookService.createBooking(req.body);
-    }
+  @MessagePattern('booking.updateStatus')
+  async updateBookingStatus(@Body() body): Promise<Booking> {
+    return this.bookService.updateBookingStatus(body.id, body.status);
+  }
 
-    @MessagePattern("booking.updateStatus")
-    async updateBookingStatus(@Body() body): Promise<Booking> {
-        return this.bookService.updateBookingStatus(body.id, body.status);
-    }
+  @MessagePattern('booking.search')
+  async search(@Body() body): Promise<Gigster[]> {
+    return this.bookService.search(body);
+  }
 
-    @MessagePattern("booking.search")
-    async search(@Body() body): Promise<Gigster[]> {
-        return this.bookService.search(body);
-    }
+  @MessagePattern('packages.findById')
+  async findById(body: any) {
+    // return await this.bookService.findPackageById(body.id);
+  }
 }

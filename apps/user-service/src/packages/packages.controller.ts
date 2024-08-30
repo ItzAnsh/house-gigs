@@ -26,6 +26,11 @@ export class PackagesController {
     return await this.packagesService.createPackage(body);
   }
 
+  @MessagePattern('packages.findById')
+    async findById(body: any) {
+        return await this.packagesService.findById(body.id);
+    }
+
   @MessagePattern('packages.findByUserId')
   async findByUserId(body: any) {
     return await this.packagesService.findByUserId(body.id);

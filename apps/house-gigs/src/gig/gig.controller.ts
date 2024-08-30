@@ -28,4 +28,12 @@ export class GigController {
       gig: { name: body.name, description: body.description },
     });
   }
+
+  @Get('/delete/:id')
+  removeGig(@Param('id') id: string) {
+    if (!id) {
+      throw new HttpErrorByCode[400]('No ID passed');
+    }
+    return this.gigService.sendServiceRequest('gig.removeGig', { id: id });
+  }
 }

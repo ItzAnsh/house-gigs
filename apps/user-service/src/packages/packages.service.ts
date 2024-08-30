@@ -49,8 +49,12 @@ export class PackagesService {
     });
     console.log(foundGigster);
 
-
-    if (!foundUser || !foundGigster || foundUser.role == 'user' || foundGigster.user.id !== foundUser.id) {
+    if (
+      !foundUser ||
+      !foundGigster ||
+      foundUser.role == 'user' ||
+      foundGigster.user.id !== foundUser.id
+    ) {
       throw new Error('User not found');
     }
 
@@ -159,5 +163,13 @@ export class PackagesService {
 
     packageToUpdate.description = description;
     return await this.packageRepository.save(packageToUpdate);
+  }
+
+  async findById(id: string) {
+    return await this.packageRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 }

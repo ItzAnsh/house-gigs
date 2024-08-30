@@ -31,4 +31,9 @@ export class GigService {
     async find(id: String): Promise<Gig> {
         return await this.gigRepository.findOne({ where: { id: id as UUID } });
     }
+
+    async delete(id: string): Promise<void> {
+        const gig = await this.gigRepository.findOne({ where: { id: id } });
+        await this.gigRepository.delete(gig);
+    }
 }

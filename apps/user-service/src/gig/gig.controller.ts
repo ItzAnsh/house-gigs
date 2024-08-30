@@ -40,4 +40,13 @@ export class GigController {
 
     return this.gigService.find(body.id);
   }
+
+  @MessagePattern('gig.deleteGig')
+  async deleteGig(@Body() body): Promise<void> {
+    if (!body.id) {
+      throw new HttpErrorByCode[400]('No ID passed');
+    }
+
+    await this.gigService.delete(body.id);
+  }
 }
