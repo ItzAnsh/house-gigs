@@ -10,6 +10,7 @@ import { TokenParser } from './utils/tokenParser';
 import { MiddlewareConsumer } from '@nestjs/common';
 import { NestModule } from '@nestjs/common';
 import { CustomerModule } from './customer/customer.module';
+import { PackagesModule } from './packages/packages.module';
 
 @Module({
   imports: [
@@ -50,12 +51,14 @@ import { CustomerModule } from './customer/customer.module';
     GigsterModule,
 
     CustomerModule,
+
+    PackagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TokenParser).forRoutes('/gigster', '/customer');
+    consumer.apply(TokenParser).forRoutes('/gigster', '/customer', '/packages');
   }
 }

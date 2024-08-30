@@ -6,6 +6,5 @@ export const packageDto = z.object({
     user: z.string(),
     price: z.number(),
     currency: z.enum(["USD", "INR"]).default("USD"),
-    createdAt: z.string(),
     gig: z.string(),
 });

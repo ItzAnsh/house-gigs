@@ -16,6 +16,7 @@ dotenv.config();
     GigModule,
     CustomerModule,
     GigsterModule,
+    PackagesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -28,7 +29,6 @@ dotenv.config();
       synchronize: true,
       ssl: { rejectUnauthorized: false },
     }),
-    PackagesModule,
   ],
   controllers: [UserServiceController],
   providers: [UserServiceService],

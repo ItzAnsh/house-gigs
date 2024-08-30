@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToOne, OneToMany} from 'typeorm';
-import { User } from 'apps/house-gigs/src/entities/user.entity';
+import { User } from './user.entity';
 import { Gig } from './gig.entity';
 import { Slot } from './slot.entity';
 

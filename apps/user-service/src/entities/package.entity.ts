@@ -10,7 +10,7 @@ import {
 import { Gig } from './gig.entity';
 import { User } from './user.entity';
 
-enum Currency {
+export enum Currency {
   USD = '$',
   INR = '₹',
 }
@@ -20,7 +20,7 @@ export class Package {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { eager: true })
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn()
   user: User;
 
@@ -46,7 +46,7 @@ export class Package {
   })
   price: number;
 
-  @OneToOne(() => Gig)
+  @ManyToOne(() => Gig)
   @JoinColumn()
   gig: Gig;
 
