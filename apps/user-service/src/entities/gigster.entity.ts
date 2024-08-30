@@ -28,6 +28,7 @@ export class Gigster {
   slotTimings: Slot[];
 
   @OneToMany(() => Package, (pkg) => pkg.id)
+  @JoinColumn()
   packages: Package[];
 
   @Column({

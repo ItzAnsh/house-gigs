@@ -6,8 +6,9 @@ import * as jwt from 'jsonwebtoken';
 export class TokenParser implements NestMiddleware {
   use(req, res: Response, next: () => void) {
     try {
+      // console.log(req.headers.authorization);
       const token = req.headers.authorization.split(' ')[1];
-      console.log(token);
+      // console.log(token);
       if (token) {
         req.token = token;
 

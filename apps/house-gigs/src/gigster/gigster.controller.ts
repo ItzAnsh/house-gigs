@@ -56,9 +56,12 @@ export class GigsterController {
   //   return res;
   // }
 
-  @Get("/allSlots")
+  @Get('/allSlots')
   async getAllSlots() {
-    return await this.gigsterService.sendServiceRequest('gigster.getAllSlots', {});
+    return await this.gigsterService.sendServiceRequest(
+      'gigster.getAllSlots',
+      {},
+    );
   }
 
   @Get('/getAllGigsters')
@@ -71,10 +74,13 @@ export class GigsterController {
 
   @Post('/addTimeSlotToGigster')
   async addTimeSlotToGigster(@Request() req, @Body() body) {
-    return await this.gigsterService.sendServiceRequest('gigster.addTimeSlotToGigster', {
-      ...body,
-      userId: req.user,
-    });
+    return await this.gigsterService.sendServiceRequest(
+      'gigster.addTimeSlotToGigster',
+      {
+        ...body,
+        userId: req.user,
+      },
+    );
   }
 
   @Get('/updateGiggy')
@@ -99,5 +105,13 @@ export class GigsterController {
     // console.log(res);
 
     return res;
+  }
+
+  @Post('/getTopGigsters')
+  async getTopGigsters(@Body() body) {
+    return await this.gigsterService.sendServiceRequest(
+      'gigster.getTopGigsters',
+      body,
+    );
   }
 }

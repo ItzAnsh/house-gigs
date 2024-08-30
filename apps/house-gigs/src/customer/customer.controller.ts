@@ -45,5 +45,10 @@ export class CustomerController {
         return this.customerService.sendBookingService("booking.updateStatus", {id: param.id, status: body.status});
     }
 
+    @Post("/search")
+    async search(@Body() body) {
+        return this.customerService.sendBookingService("booking.search", body);
+    }
+
 }
 // Implement middleware

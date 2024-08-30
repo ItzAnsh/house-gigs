@@ -56,4 +56,9 @@ export class GigsterController {
     console.log('HEREEE');
     return await this.gigsterService.updateGigster();
   }
+
+  @MessagePattern('gigster.getTopGigsters')
+  async getTopGigsters(body: any) {
+    return await this.gigsterService.getTopGigsters(body);
+  }
 }

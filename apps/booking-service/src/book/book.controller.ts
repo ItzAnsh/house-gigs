@@ -2,6 +2,8 @@ import { Controller, Get, Post, Request, Body, Param } from '@nestjs/common';
 import { Booking } from '../entities/booking.entity';
 import { BookService } from './book.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { Gig } from '../entities/gig.entity';
+import { Gigster } from '../entities/gigster.entity';
 
 @Controller('bookPriv')
 export class BookController {
@@ -27,5 +29,10 @@ export class BookController {
     @MessagePattern("booking.updateStatus")
     async updateBookingStatus(@Body() body): Promise<Booking> {
         return this.bookService.updateBookingStatus(body.id, body.status);
+    }
+
+    @MessagePattern("booking.search")
+    async search(@Body() body): Promise<Gigster[]> {
+        return this.bookService.search(body);
     }
 }

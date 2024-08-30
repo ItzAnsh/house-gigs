@@ -1,8 +1,11 @@
-import { UUID } from 'crypto';
 import {
   PrimaryGeneratedColumn,
   Column,
   Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  JoinTable,
   OneToOne,
   JoinColumn,
 } from 'typeorm';
@@ -16,29 +19,31 @@ export class Gigster {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { eager: true }) // Relation to User
+  @OneToOne(() => User)
   @JoinColumn()
-  userId: User;
+  user: User;
 
-  @OneToOne(() => Slot) // Relation to Slot
-  @JoinColumn()
-  slotTimings: Slot;
+  @ManyToMany(() => Slot, (slot) => slot.id)
+  @JoinTable() // Required for the owning side of a @ManyToMany relationship
+  slotTimings: Slot[];
 
-  @OneToOne(() => Package) // Relation to Package
+  @OneToMany(() => Package, (pkg) => pkg.id)
   @JoinColumn()
-  packages: Package;
+  packages: Package[];
 
   @Column({
     default: true,
   })
   available: boolean;
 
-  @OneToOne(() => Gig, (gig) => gig.id) // Relation to Gig
-  @JoinColumn()
+  @ManyToOne(() => Gig)
+  @JoinColumn({ name: 'gigId' }) // Properly join with foreign key
   gig: Gig;
 
-  @OneToOne(() => User, (user) => user.id)
-  @JoinColumn()
+  @Column({
+    nullable: false,
+    type: 'uuid',
+  })
   gigId: string;
 
   @Column('decimal', { precision: 5, scale: 2, default: 0 })

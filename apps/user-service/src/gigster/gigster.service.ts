@@ -202,4 +202,24 @@ export class GigsterService {
   async getSlots() {
     return await this.slotRepository.find();
   }
+
+  async getTopGigsters({gigId}) {
+    const gigsters = await this.gigsterRepository.find({
+      where: {
+        gig: {
+          id: gigId,
+        },
+      },
+      relations: ['user', 'packages'],
+      take: 10,
+    });
+
+    console.log(gigsters);
+
+    gigsters.sort((a, b) => {
+      return b.rating - a.rating;
+    });
+
+    return gigsters.slice(0, 5);
+  }
 }
