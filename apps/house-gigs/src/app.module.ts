@@ -6,7 +6,7 @@ import { UserModule } from './user/user.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GigModule } from './gig/gig.module';
 import { GigsterModule } from './gigster/gigster.module';
-import { TokenParser } from './utils/tokenParser';
+import { TokenParser } from './middlewares/tokenParser';
 import { MiddlewareConsumer } from '@nestjs/common';
 import { NestModule } from '@nestjs/common';
 import { CustomerModule } from './customer/customer.module';
