@@ -66,7 +66,7 @@ export class PackagesService {
       Object.assign(newPackage, {
         name: parsedData.name,
         description: parsedData.description,
-        user: { id: foundUser.id } as User,
+        user: { id: foundGigster.id } as Gigster,
         currency: parsedData.currency === 'USD' ? Currency.USD : Currency.INR,
         price: parsedData.price,
         gig: { id: foundGigster.gig.id } as Gig,
@@ -92,6 +92,7 @@ export class PackagesService {
   }
 
   async findByUserId(userId: string) {
+    console.log(userId);
     return await this.packageRepository.find({
       where: {
         user: {

@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Gig } from './gig.entity';
 import { User } from './user.entity';
+// import { Gigster } from './gigster.entity';
 
 export enum Currency {
   USD = '$',

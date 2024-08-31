@@ -7,31 +7,30 @@ import * as jwt from 'jsonwebtoken';
 export class TokenParser implements NestMiddleware {
   use(req, res: Response, next: () => void) {
     try {
-      // console.log(req.headers.authorization);
       const token = req.headers.authorization;
-
       if (!token) {
         throw new HttpErrorByCode[401]('Token Not Found');
       }
 
       if (token.startsWith('Bearer ')) {
-        // console.log(token);
 
         req.token = token;
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // console.log(decoded);
+        const splitToken = token.split(" ")[1];
+        const decoded = jwt.verify(splitToken, process.env.JWT_SECRET);
+
         req.user = decoded.id;
         next();
       } else {
         throw new HttpErrorByCode[401]('Token Not Found');
       }
     } catch (e) {
-      // console.log(e);
       if (TypeError.isPrototypeOf(e)) {
         throw new HttpErrorByCode[401]('Token Not Found');
       }
-      throw e;
+      console.log(e);
+
+      throw new HttpErrorByCode[401]('Invalid Token');
     }
   }
 }

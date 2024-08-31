@@ -6,7 +6,7 @@ export class PublicController {
     constructor(private readonly publicService: PublicService) {}
 
     @Get("/home")
-    async getHome(@Query("g") gigLimit, @Query("gi") gigsterLimit) {
-        return await this.publicService.homepage(gigLimit, gigsterLimit);
+    async getHome(@Query("g") gigLimit, @Query("gi") packageLimit) {
+        return await this.publicService.homepage(gigLimit, packageLimit);
     }
 }

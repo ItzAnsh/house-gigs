@@ -33,7 +33,11 @@ export class PackagesController {
 
   @MessagePattern('packages.findByUserId')
   async findByUserId(body: any) {
+    try {
     return await this.packagesService.findByUserId(body.id);
+    } catch(e) {
+      
+    }
   }
 
   @MessagePattern('packages.findByGigId')
