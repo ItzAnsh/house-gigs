@@ -25,7 +25,7 @@ export class PublicService {
             order: {
                 rating: 'DESC'
             },
-            take: 9
+            take: 18
         });
     }
 
