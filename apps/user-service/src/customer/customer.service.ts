@@ -2,12 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Customer } from '../entities/customer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Gig } from '../entities/gig.entity';
+import { Gigster } from '../entities/gigster.entity';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
+    @InjectRepository(Gig) private gigRepo: Repository<Gig>,
+    @InjectRepository(Gigster) private  gigsterRepo: Repository<Gigster>
+    
   ) {}
 
   async createCustomer(customerData: any): Promise<Customer> {
@@ -58,5 +63,23 @@ export class CustomerService {
       console.log(e);
       throw e;
     }
+  }
+
+  async homepage() {
+    try {
+      const gigs = await this.gigRepo.find({
+        take: 9,
+      }) 
+
+      const gigsters = await this.gigsterRepo.find({
+        take: 9,
+      })
+
+      return {
+        gigs,
+        gigsters
+      }
+    } catch(e) {}
+
   }
 }

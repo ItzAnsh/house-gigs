@@ -11,6 +11,7 @@ import { MiddlewareConsumer } from '@nestjs/common';
 import { NestModule } from '@nestjs/common';
 import { CustomerModule } from './customer/customer.module';
 import { PackagesModule } from './packages/packages.module';
+import { PublicModule } from './public/public.module';
 
 @Module({
   imports: [
@@ -53,6 +54,8 @@ import { PackagesModule } from './packages/packages.module';
     CustomerModule,
 
     PackagesModule,
+
+    PublicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

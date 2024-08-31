@@ -30,4 +30,9 @@ export class CustomerController {
   async removeCustomerById(data: any) {
     return this.customerService.removeCustomerById(data);
   }
+
+  @MessagePattern("user.homepage")
+  async homepage() {
+    return this.customerService.homepage();
+  }
 }
