@@ -8,6 +8,7 @@ export class TokenParser implements NestMiddleware {
   use(req, res: Response, next: () => void) {
     try {
       const token = req.headers.authorization;
+      console.log(token);
       if (!token) {
         throw new HttpErrorByCode[401]('Token Not Found');
       }
@@ -17,6 +18,7 @@ export class TokenParser implements NestMiddleware {
         req.token = token;
 
         const splitToken = token.split(" ")[1];
+        // console.log(splitToken)
         const decoded = jwt.verify(splitToken, process.env.JWT_SECRET);
 
         req.user = decoded.id;

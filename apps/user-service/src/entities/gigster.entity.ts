@@ -24,7 +24,7 @@ export class Gigster {
   user: User;
 
   @ManyToMany(() => Slot, (slot) => slot.id)
-  @JoinTable() // Required for the owning side of a @ManyToMany relationship
+  @JoinTable()
   slotTimings: Slot[];
 
   @OneToMany(() => Package, (pkg) => pkg.id)

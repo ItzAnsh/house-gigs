@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { PackagesService } from './packages.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @Controller('packages')
 export class PackagesController {
@@ -36,7 +37,7 @@ export class PackagesController {
     try {
     return await this.packagesService.findByUserId(body.id);
     } catch(e) {
-      
+
     }
   }
 
@@ -48,6 +49,10 @@ export class PackagesController {
   @MessagePattern('packages.updateDescription')
   async updateDescription(body: any) {
     // console.log(body);
+    try {
     return await this.packagesService.updateDescription(body);
+    } catch(e) {
+      throw new HttpErrorByCode[400]('Error updating description');
+    }
   }
 }
