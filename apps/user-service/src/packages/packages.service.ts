@@ -130,6 +130,8 @@ export class PackagesService {
           id: gigId,
         },
       },
+
+      relations: ['gig', 'user', 'user.user'],
     });
   }
 
@@ -141,6 +143,21 @@ export class PackagesService {
       },
 
       relations: ['user'],
+
+      select: {
+        id: true, 
+        name: true,
+        currency: true,
+        price: true,
+        description: true,
+        user: {
+          id: true,
+          user: {
+            id: true,
+            name: true,
+          }
+        },
+      }
     });
 
     // console.log(body.userId, packageToUpdate.user.id);
