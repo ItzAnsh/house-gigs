@@ -15,7 +15,7 @@ export class PublicService {
 
     async findAllPackages(limit: number): Promise<Package[]> {
         return this.packageRepository.find({
-            relations: ['gig', 'gigster', 'gigster.user'],
+            relations: ['gig'],
             order: {
                 gigster: {
                     rating: 'DESC'

@@ -131,7 +131,7 @@ export class PackagesService {
         },
       },
 
-      relations: ['gig', 'user', 'user.user'],
+      relations: ['gig', 'user'],
     });
   }
 
