@@ -24,21 +24,20 @@ export class PackagesController {
 
   @MessagePattern('packages.create')
   async createPackage(body: any) {
+    console.log(body);
     return await this.packagesService.createPackage(body);
   }
 
   @MessagePattern('packages.findById')
-    async findById(body: any) {
-        return await this.packagesService.findById(body.id);
-    }
+  async findById(body: any) {
+    return await this.packagesService.findById(body.id);
+  }
 
   @MessagePattern('packages.findByUserId')
   async findByUserId(body: any) {
     try {
-    return await this.packagesService.findByUserId(body.id);
-    } catch(e) {
-
-    }
+      return await this.packagesService.findByUserId(body.id);
+    } catch (e) {}
   }
 
   @MessagePattern('packages.findByGigId')
@@ -50,8 +49,8 @@ export class PackagesController {
   async updateDescription(body: any) {
     // console.log(body);
     try {
-    return await this.packagesService.updateDescription(body);
-    } catch(e) {
+      return await this.packagesService.updateDescription(body);
+    } catch (e) {
       throw new HttpErrorByCode[400]('Error updating description');
     }
   }

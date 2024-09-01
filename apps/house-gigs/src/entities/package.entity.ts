@@ -21,9 +21,9 @@ export class Package {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => Gigster, (gigster) => gigster.id)
   @JoinColumn()
-  user: User;
+  gigster: Gigster;
 
   @Column({
     nullable: false,

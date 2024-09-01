@@ -8,7 +8,6 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Gig } from './gig.entity';
-import { User } from './user.entity';
 import { Gigster } from './gigster.entity';
 
 export enum Currency {
@@ -21,9 +20,9 @@ export class Package {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => Gigster, (gigster) => gigster.id)
   @JoinColumn()
-  user: User;
+  user: Gigster;
 
   @Column({
     nullable: false,

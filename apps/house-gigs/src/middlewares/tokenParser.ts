@@ -8,7 +8,7 @@ export class TokenParser implements NestMiddleware {
   use(req, res: Response, next: () => void) {
     try {
       const token = req.headers.authorization;
-      console.log(token);
+      // console.log(token);
       if (!token) {
         throw new HttpErrorByCode[401]('Token Not Found');
       }

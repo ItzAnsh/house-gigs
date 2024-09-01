@@ -33,45 +33,38 @@ export class PackagesService {
     });
   }
 
-  async createPackage(packageData: any): Promise<Package> {
-    const foundUser = await this.userRepository.findOne({
+  async createPackage(packageData: any): Promise<void> {
+    // console.log(packageData)
+    const foundUser = await this.gigsterRepository.findOne({
       where: {
-        id: packageData.userId,
-      },
-    });
-
-    const foundGigster = await this.gigsterRepository.findOne({
-      where: {
-        // user: { id: foundUser.id },
         id: packageData.gigster,
       },
-      relations: ['gig', 'user'],
+      relations: ['gig', 'user', 'user'],
     });
-    console.log(foundGigster);
+    // console.log(foundUser)
 
     if (
       !foundUser ||
-      !foundGigster ||
-      foundUser.role == 'user' ||
-      foundGigster.user.id !== foundUser.id
+      foundUser.user.role != 'gigster'
     ) {
       throw new Error('User not found');
     }
 
     packageData.user = foundUser.id;
-    packageData.gig = foundGigster.gig.id;
+    packageData.gig = foundUser.gig.id;
     try {
       const newPackage = new Package();
       const parsedData = packageDto.parse(packageData);
       Object.assign(newPackage, {
         name: parsedData.name,
         description: parsedData.description,
-        user: { id: foundGigster.id } as Gigster,
+        user: { id: foundUser.id } as Gigster,
         currency: parsedData.currency === 'USD' ? Currency.USD : Currency.INR,
         price: parsedData.price,
-        gig: { id: foundGigster.gig.id } as Gig,
+        gig: { id: foundUser.gig.id } as Gig,
       });
-      return await this.packageRepository.save(newPackage);
+      await this.packageRepository.save(newPackage);
+      return;
     } catch (e) {
       console.log(e);
       throw e;
@@ -96,11 +89,11 @@ export class PackagesService {
     return await this.packageRepository.find({
       where: {
         user: {
-          id: userId,
+          user: {id: userId},
         },
       },
 
-      relations: ['gig', 'user'],
+      relations: ['gig', 'user', 'user.user'],
 
       select: {
         id: true,
@@ -110,12 +103,10 @@ export class PackagesService {
         price: true,
         user: {
           id: true,
-          name: true,
-          email: true,
-          password: false,
-          role: false,
-          isVerified: false,
-          created_at: false,
+          user: {
+            name: true,
+            email: true,
+          }
         },
         gig: {
           id: true,

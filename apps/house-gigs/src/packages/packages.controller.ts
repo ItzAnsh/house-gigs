@@ -27,11 +27,12 @@ export class PackagesController {
   }
 
   @Post('/create')
-  async createPackage(@Req() req, @Body() body: any) {
-    return await this.packagesService.sendPackageMessage('packages.create', {
+  async createPackage(@Req() req, @Body() body: any): Promise<void> {
+    await this.packagesService.sendPackageMessage('packages.create', {
       ...body,
       userId: req.user,
     });
+    return;
   }
 
   @Post('/findByUserId')
