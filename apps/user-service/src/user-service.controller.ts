@@ -19,8 +19,7 @@ export class UserServiceController {
   }
 
   @MessagePattern('user.createDetails')
-  async createUserDetails(@Payload() data) {
-  }
+  async createUserDetails(@Payload() data) {}
 
   @MessagePattern('user.getDetails')
   async getUserDetails(@Payload() data) {

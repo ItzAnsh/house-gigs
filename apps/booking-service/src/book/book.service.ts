@@ -8,13 +8,14 @@ import { Gigster } from '../entities/gigster.entity';
 import { Gig } from '../entities/gig.entity';
 
 async function isSafe(
-  alreadyBookings: Booking[],
-  booking: Booking,
+  alreadyBookings: any,
+  booking: any,
 ): Promise<boolean> {
   for (let i = 0; i < alreadyBookings.length; i++) {
-    if (alreadyBookings[i].slotId === booking.slotId) {
+    if (alreadyBookings[i].slot.id === booking.slot.id) {
       return false;
     }
+    
   }
   return true;
 }
@@ -36,6 +37,7 @@ export class BookService {
         },
         status: BookingStatus.accepted,
       },
+      relations: ['slotId'],
     });
 
     if (alreadyBookings.length > 0) {
