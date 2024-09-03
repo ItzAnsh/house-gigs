@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Expose port
-EXPOSE 3000
+EXPOSE 10000
 
 # Start the service
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:prod", "user-servce"]
