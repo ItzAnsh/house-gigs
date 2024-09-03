@@ -10,6 +10,7 @@ import {
 import { User } from 'apps/house-gigs/src/entities/user.entity';
 import { Gig } from './gig.entity';
 import { Slot } from './slot.entity';
+import { Gigster } from './gigster.entity';
 
 enum BookingStatus {
   pending = 'pending',
@@ -36,9 +37,9 @@ export class Booking {
   @JoinColumn()
   slotId: Slot[];
 
-  @OneToOne(() => User, (user) => user.id)
+  @OneToOne(() => Gigster, (gigster) => gigster.id)
   @JoinColumn()
-  gigsterId: User;
+  gigsterId: Gigster;
 
   @Column({
     nullable: false,

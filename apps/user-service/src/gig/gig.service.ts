@@ -16,24 +16,24 @@ export class GigService {
 
   async create(gig: Gig): Promise<Gig> {
     try {
-        GigDto.parse(gig);
-        return await this.gigRepository.save(gig);
-    } catch(e) {
-        throw new HttpErrorByCode[400]('Invalid Data passed');
+      GigDto.parse(gig);
+      return await this.gigRepository.save(gig);
+    } catch (e) {
+      throw new HttpErrorByCode[400]('Invalid Data passed');
     }
   }
 
-  async remove(id: String): Promise<Gig> {
-    const gig = await this.gigRepository.findOne({ where: { id: id as UUID } });
+  async remove(id: string): Promise<Gig> {
+    const gig = await this.gigRepository.findOne({ where: { id: id } });
     return await this.gigRepository.remove(gig);
   }
 
-    async find(id: String): Promise<Gig> {
-        return await this.gigRepository.findOne({ where: { id: id as UUID } });
-    }
+  async find(id: string): Promise<Gig> {
+    return await this.gigRepository.findOne({ where: { id: id } });
+  }
 
-    async delete(id: string): Promise<void> {
-        const gig = await this.gigRepository.findOne({ where: { id: id } });
-        await this.gigRepository.delete(gig);
-    }
+  async delete(id: string): Promise<void> {
+    const gig = await this.gigRepository.findOne({ where: { id: id } });
+    await this.gigRepository.delete(gig);
+  }
 }

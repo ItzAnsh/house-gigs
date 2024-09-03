@@ -12,11 +12,14 @@ export class GigController {
   }
 
   @Get('/:id')
-  findGig(@Param('id') id: string) {
+  async findGig(@Param('id') id: string) {
     if (!id) {
       throw new HttpErrorByCode[400]('No ID passed');
     }
-    return this.gigService.sendServiceRequest('gig.findGig', { id: id });
+    const res = await this.gigService.sendServiceRequest('gig.findGig', { id: id });
+    console.log(res)
+
+    return res;
   }
 
   @Post('/')

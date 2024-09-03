@@ -23,7 +23,7 @@ export class Package {
 
   @ManyToOne(() => Gigster, (gigster) => gigster.id)
   @JoinColumn()
-  gigster: Gigster;
+  user: Gigster;
 
   @Column({
     nullable: false,
