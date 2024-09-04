@@ -38,6 +38,16 @@ export class Booking {
   @JoinColumn()
   slotId: Slot[];
 
+  @Column({
+    nullable: false,
+  })
+  start: Date
+
+  @Column({
+    nullable: false,
+  })
+  end: Date
+
   @OneToOne(() => Gigster, (user) => user.id)
   @JoinColumn()
   gigsterId: Gigster;

@@ -28,6 +28,7 @@ export class PackagesController {
 
   @Post('/create')
   async createPackage(@Req() req, @Body() body: any): Promise<void> {
+    console.log(body);
     await this.packagesService.sendPackageMessage('packages.create', {
       ...body,
       userId: req.user,

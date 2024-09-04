@@ -34,27 +34,28 @@ export class PackagesService {
   }
 
   async createPackage(packageData: any): Promise<void> {
-    // console.log(packageData)
+    console.log(packageData);
     const foundUser = await this.gigsterRepository.findOne({
       where: {
         id: packageData.gigster,
       },
-      relations: ['gig', 'user', 'user'],
+      relations: ['gig', 'user'], // Removed duplicate 'user'
     });
-    // console.log(foundUser)
+    console.log("Found the user")
 
-    if (
-      !foundUser ||
-      foundUser.user.role != 'gigster'
-    ) {
-      throw new Error('User not found');
+    if (!foundUser || !foundUser.user || foundUser.user.role !== 'gigster') {
+      throw new Error('Gigster not found or invalid role');
     }
 
-    packageData.user = foundUser.id;
+    packageData.gigster = foundUser.id;
     packageData.gig = foundUser.gig.id;
+
     try {
       const newPackage = new Package();
       const parsedData = packageDto.parse(packageData);
+
+      console.log("parsed data")
+
       Object.assign(newPackage, {
         name: parsedData.name,
         description: parsedData.description,
@@ -63,11 +64,16 @@ export class PackagesService {
         price: parsedData.price,
         gig: { id: foundUser.gig.id } as Gig,
       });
+
+      console.log("assigned data")
+
+      console.log(newPackage);
       await this.packageRepository.save(newPackage);
-      return;
+
+      console.log("saved data")
     } catch (e) {
-      console.log(e);
-      throw e;
+      console.error('Error creating package:', e);
+      throw new Error('Failed to create package');
     }
   }
 
@@ -89,7 +95,7 @@ export class PackagesService {
     return await this.packageRepository.find({
       where: {
         user: {
-          user: {id: userId},
+          id: userId
         },
       },
 
@@ -106,7 +112,7 @@ export class PackagesService {
           user: {
             name: true,
             email: true,
-          }
+          },
         },
         gig: {
           id: true,
@@ -145,7 +151,7 @@ export class PackagesService {
       relations: ['user'],
 
       select: {
-        id: true, 
+        id: true,
         name: true,
         currency: true,
         price: true,
@@ -155,9 +161,9 @@ export class PackagesService {
           user: {
             id: true,
             name: true,
-          }
+          },
         },
-      }
+      },
     });
 
     // console.log(body.userId, packageToUpdate.user.id);

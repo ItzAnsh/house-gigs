@@ -44,6 +44,7 @@ export class PublicService {
 
   async getGigsterTime(id: string) {
     try {
+        // console.log(id);
       const result = await this.gigsterRepository.findOne({
         relations: ['slotTimings'],
         where: {

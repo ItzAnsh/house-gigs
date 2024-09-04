@@ -177,24 +177,36 @@ export class GigsterService {
     if (!body.userId) {
       throw new HttpErrorByCode[401]('Unauthorized');
     }
+
     const gigster = await this.gigsterRepository.findOne({
-      where: {
-        user: body.userId
-      },
+      where: { user: { id: body.userId } },
+      relations: ['slotTimings'],
     });
-    console.log(gigster);
+
+    if (!gigster) {
+      throw new HttpErrorByCode[404]('Gigster not found');
+    }
 
     const slots = await this.slotRepository.findBy({
       id: In(body.slots),
     });
 
-    // console.log(slots);
-    body.slots.forEach((slot) => {
-      if (!slots.includes(slot as Slot)) {
-        gigster.slotTimings.push(slot as Slot);
+    if (slots.length === 0) {
+      throw new HttpErrorByCode[404]('Slots not found');
+    }
+
+    const alreadySlots = [...gigster.slotTimings];
+
+    body.slots.forEach((slotId) => {
+      if (!alreadySlots.some((slot) => slot.id === slotId)) {
+        const newSlot = slots.find((s) => s.id === slotId);
+        if (newSlot) {
+          alreadySlots.push(newSlot);
+        }
       }
     });
-    console.log(gigster);
+
+    gigster.slotTimings = alreadySlots;
 
     return await this.gigsterRepository.save(gigster);
   }
@@ -203,7 +215,7 @@ export class GigsterService {
     return await this.slotRepository.find();
   }
 
-  async getTopGigsters({gigId}) {
+  async getTopGigsters({ gigId }) {
     const gigsters = await this.gigsterRepository.find({
       where: {
         gig: {
